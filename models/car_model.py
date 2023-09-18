@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
 from config.db import Base, engine
 
 class CarModel(Base):
@@ -8,6 +9,8 @@ class CarModel(Base):
     name = Column(String(50))
     color = Column(String(50))
     price = Column(Integer)
+    # car_company = Column(String(50))
 
+    image = relationship("CarImageModel", back_populates="car")
 
-Base.metadata.create_all(engine)    
+Base.metadata.create_all(engine)
