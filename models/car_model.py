@@ -9,7 +9,7 @@ class CarModel(Base):
     name = Column(String(50))
     color = Column(String(50))
     price = Column(Integer)
-    # car_company = Column(String(50))
+    car_company = Column(String(50))
 
     image = relationship("CarImageModel", back_populates="car")
 
