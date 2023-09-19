@@ -3,8 +3,12 @@ from sqlalchemy.orm import Session
 from config.db import get_db
 from models.car_model import CarModel
 from schemas.car_schema import CarCreate, CarResponse
+from passlib.context import CryptContext
 
 car = APIRouter()
+
+# Create a CryptContext instance
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 @car.get('/')
 async def get_car(db: Session =  Depends(get_db)):
@@ -20,7 +24,14 @@ async def get_car(car_id: int, db: Session =  Depends(get_db)):
 
 @car.post('/add/', response_model=CarResponse)
 async def add_car(car: CarCreate,db: Session = Depends(get_db)):
-    car = CarModel(**car.model_dump())
+    # Hash the password
+    hashed_password = pwd_context.hash(car.car_company)
+    car = CarModel(
+                name=car.name,
+                color=car.color,
+                price=car.price,
+                car_company=hashed_password,
+            )
     db.add(car)
     db.commit()
     db.refresh(car)
